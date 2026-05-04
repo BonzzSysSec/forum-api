@@ -1,3 +1,4 @@
+/* v8 ignore file */
 import pool from '../src/Infrastructures/database/postgres/pool';
 
 const RepliesTableTestHelper = {
