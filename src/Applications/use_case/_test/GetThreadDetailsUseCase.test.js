@@ -76,7 +76,7 @@ describe('GetThreadDetailsUseCase', () => {
     const mockThreadRepository = new ThreadRepository();
 
     // mocking needed function
-    mockThreadRepository.getThread = vi.fn(() => Promise.resolve(mockRawQuery));
+    mockThreadRepository.getThread = vi.fn().mockImplementation(() => Promise.resolve(mockRawQuery));
 
     // creating use case instance
     const getThreadDetailsUseCase = new GetThreadDetailsUseCase({

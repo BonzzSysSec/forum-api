@@ -16,6 +16,7 @@ export default defineConfig([
     rules: {
       camelcase: 'off',
       'no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
+      'linebreak-style': 'off',
     },
   },
 ]);

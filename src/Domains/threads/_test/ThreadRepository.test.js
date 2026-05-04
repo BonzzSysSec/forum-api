@@ -10,6 +10,11 @@ describe('ThreadRepository', () => {
     await expect(threadRepository.getThread('')).rejects.toThrowError(
       'THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED',
     );
+
+    await expect(threadRepository.listThreads(10, 0)).rejects.toThrowError(
+      'THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED',
+    );
+
     await expect(
       threadRepository.verifyAvailableThread(''),
     ).rejects.toThrowError('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');

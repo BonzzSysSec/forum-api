@@ -4,6 +4,7 @@ import { authenticationMiddleware } from '../../middleware/authenticationMiddlew
 const createThreadRouter = (handler) => {
   const router = express.Router();
 
+  router.get('/', handler.listThreadsHandler);
   router.get('/:threadId', handler.getThreadDetailsHandler);
 
   router.use(authenticationMiddleware);

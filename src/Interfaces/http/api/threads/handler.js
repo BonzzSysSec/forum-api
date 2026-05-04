@@ -1,11 +1,13 @@
 import AddThreadUseCase from '../../../../Applications/use_case/AddThreadUseCase.js';
 import GetThreadDetailsUseCase from '../../../../Applications/use_case/GetThreadDetailsUseCase.js';
+import ListThreadsUseCase from '../../../../Applications/use_case/ListThreadsUseCase.js';
 
 class ThreadsHandler {
   constructor(container) {
     this.container = container;
     this.postThreadHandler = this.postThreadHandler.bind(this);
     this.getThreadDetailsHandler = this.getThreadDetailsHandler.bind(this);
+    this.listThreadsHandler = this.listThreadsHandler.bind(this);
   }
 
   async postThreadHandler(req, res, next) {
@@ -39,6 +41,30 @@ class ThreadsHandler {
         status: 'success',
         data: {
           thread,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async listThreadsHandler(req, res, next) {
+    try {
+      const { page, limit } = req.query;
+      const listThereadsUseCase = this.container.getInstance(
+        ListThreadsUseCase.name,
+      );
+
+      const { threads, pagination } = await listThereadsUseCase.execute({
+        page,
+        limit,
+      });
+
+      res.status(200).json({
+        status: 'success',
+        data: {
+          threads,
+          pagination,
         },
       });
     } catch (error) {
