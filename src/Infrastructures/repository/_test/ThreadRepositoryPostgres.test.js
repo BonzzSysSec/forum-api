@@ -98,6 +98,23 @@ describe('ThreadRepositoryPostgres', () => {
     });
   });
 
+  describe('listThreads function', () => {
+    it('should return threads correctly', async () => {
+      // Arrange
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
+      await ThreadsTableTestHelper.addThread({ id: 'thread-456', owner: 'user-123' });
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+
+      // Action
+      const threads = await threadRepositoryPostgres.listThreads(10, 0);
+
+      // Assert
+      expect(threads.total).toBe(2);
+      expect(threads.threads[0].id).toBe('thread-456');
+      expect(threads.threads[1].id).toBe('thread-123');
+    });
+  });
+
   describe('verifyAvailableThread function', () => {
     it('should throw NotFoundError when thread not found', async () => {
       // Arrange

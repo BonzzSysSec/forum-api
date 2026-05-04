@@ -69,6 +69,52 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     return result.rows;
   }
 
+  async listThreads(limit, offset) {
+    const threadsQuery = {
+      text: `
+        SELECT
+        threads.id,
+        threads.title,
+        threads.body,
+        threads.created_at AS date,
+        users.username,
+
+        COUNT(DISTINCT comments.id) AS comment_count
+
+        FROM threads
+        INNER JOIN users ON threads.owner = users.id
+        LEFT JOIN comments ON threads.id = comments.thread_id AND comments.parent_id IS NULL
+
+        GROUP BY threads.id, users.username
+        ORDER BY threads.created_at DESC
+        
+        LIMIT $1 OFFSET $2
+      `,
+      values: [limit, offset],
+    };
+
+    const countQuery = {
+      text: 'SELECT COUNT(*) FROM threads',
+    };
+
+    const [threadsResult, countResult] = await Promise.all([
+      this._pool.query(threadsQuery),
+      this._pool.query(countQuery),
+    ]);
+
+    return {
+      threads: threadsResult.rows.map((row) => ({
+        id: row.id,
+        title: row.title,
+        body: row.body,
+        date: row.date,
+        username: row.username,
+        commentCount: Number(row.comment_count) || 0,
+      })),
+      total: Number(countResult.rows[0].count),
+    };
+  }
+
   async verifyAvailableThread(id) {
     const query = {
       text: 'SELECT id FROM threads WHERE id = $1',
