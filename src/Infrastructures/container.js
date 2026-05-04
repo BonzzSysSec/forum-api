@@ -34,6 +34,7 @@ import RefreshAuthenticationUseCase from '../Applications/use_case/RefreshAuthen
 import AddThreadUseCase from '../Applications/use_case/AddThreadUseCase.js';
 import AddCommentUseCase from '../Applications/use_case/AddCommentUseCase.js';
 import GetThreadDetailsUseCase from '../Applications/use_case/GetThreadDetailsUseCase.js';
+import ListThreadsUseCase from '../Applications/use_case/ListThreadsUseCase.js';
 import DeleteCommentUseCase from '../Applications/use_case/DeleteCommentUseCase.js';
 import AddReplyUseCase from '../Applications/use_case/AddReplyUseCase.js';
 import DeleteReplyUseCase from '../Applications/use_case/DeleteReplyUseCase.js';
@@ -236,6 +237,19 @@ container.register([
   {
     key: GetThreadDetailsUseCase.name,
     Class: GetThreadDetailsUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: ListThreadsUseCase.name,
+    Class: ListThreadsUseCase,
     parameter: {
       injectType: 'destructuring',
       dependencies: [

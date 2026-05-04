@@ -375,7 +375,7 @@ describe('HTTP server', () => {
     const app = await createServer(container);
 
     // Action
-    const response = await request(app).get('/threads');
+    const response = await request(app).post('/threads');
 
     // Assert
     expect(response.status).toEqual(401);
@@ -389,7 +389,7 @@ describe('HTTP server', () => {
 
     // Action
     const response = await request(app)
-      .get('/threads')
+      .post('/threads')
       .set('Authorization', 'Bearer invalid_token');
 
     // Assert
@@ -607,6 +607,78 @@ describe('HTTP server', () => {
       expect(response.status).toEqual(404);
       expect(response.body.status).toEqual('fail');
       expect(response.body.message).toEqual('thread tidak ditemukan');
+    });
+  });
+
+  describe('when GET /threads', () => {
+    it('should return 200 and list threads with default pagination', async () => {
+      // Arrange
+      const app = await createServer(container);
+
+      // User 1
+      await UsersTableTestHelper.addUser({
+        id: 'user-123',
+        username: 'dicoding',
+      });
+
+      await ThreadTableTestHelper.addThread({
+        id: 'thread-123',
+        owner: 'user-123',
+      });
+
+      // User 2
+      await UsersTableTestHelper.addUser({
+        id: 'user-456',
+        username: 'dicoding2',
+      });
+
+      await ThreadTableTestHelper.addThread({
+        id: 'thread-456',
+        owner: 'user-456',
+      });
+
+      // Action
+      const response = await request(app).get('/threads?page=1&limit=10');
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body.status).toEqual('success');
+      expect(response.body.data).toBeDefined();
+    });
+
+    it('should return 200 and list threads with custom pagination', async () => {
+      // Arrange
+      const app = await createServer(container);
+
+      // User 1
+      await UsersTableTestHelper.addUser({
+        id: 'user-123',
+        username: 'dicoding',
+      });
+
+      await ThreadTableTestHelper.addThread({
+        id: 'thread-123',
+        owner: 'user-123',
+      });
+
+      // User 2
+      await UsersTableTestHelper.addUser({
+        id: 'user-456',
+        username: 'dicoding2',
+      });
+
+      await ThreadTableTestHelper.addThread({
+        id: 'thread-456',
+        owner: 'user-456',
+      });
+
+      // Action
+      const response = await request(app).get('/threads?page=1&limit=1');
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body.status).toEqual('success');
+      expect(response.body.data).toBeDefined();
     });
   });
 
