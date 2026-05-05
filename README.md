@@ -199,8 +199,8 @@ GET /threads?page=1&limit=10
 
 This project uses **GitHub Actions** for automated testing and deployment to **AWS EC2**:
 
-1. On every push to `main`: run lint + tests
-2. On passing tests: SSH deploy to EC2 and restart the app
+1. On every **Pull Request** to `main`: run tests
+2. On PR **merged** to `main`: SSH deploy to EC2 and reload app with **PM2**
 
 ## License
 
